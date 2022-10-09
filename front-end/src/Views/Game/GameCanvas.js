@@ -1,26 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-// constants definition
-const COLOR_BACKGROUND          = '#000000';
-const COLOR_PLANE               = '#FFFFFF';
-const COLOR_BULLET              = '#00FF00';
-const COLOR_FONT                = '#FFFF00';
-const COLOR_ENEMY_BLUE          = '#0000FF';
-const COLOR_ENEMY_RED           = '#FF0000';
-
-const FRAMES_PER_SECOND         = 60;
-const CANVAS_WIDTH              = 600;
-const CANVAS_HEIGHT             = 600;
-const PLANE_WIDTH               = 50;
-const PLANE_HEIGHT              = 50;
-const PLANE_TIP_POS             = PLANE_WIDTH / 2;
-const PLANE_VERTICAL_PLANE      = CANVAS_HEIGHT - PLANE_HEIGHT - 10;
-const PLANE_MOVE_SPEED          = 10;
-const ENEMY_APPEAR_RATE         = 2000; // milliseconds
-
-const COLLISION_PLANE_ENEMY     = 'plane_enemy_collision';
-const COLLISION_BULLET_ENEMY    = 'bullet_enemy_collision';
-const COLLISION_NONE            = 'no_collision';
 
 // reactjs functional component
 function GameCanvas({reduceLives, addPoint}) {
