@@ -1,4 +1,22 @@
 import { useEffect, useRef, useState } from "react";
+import { 
+  COLOR_BACKGROUND,
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
+  MOVE_LEFT,
+  MOVE_RIGHT,
+  PLANE_TIP_POS,
+  COLLISION_PLANE_ENEMY,
+  COLLISION_BULLET_ENEMY,
+  COLLISION_BULLET_PLANE,
+  COLLISION_NONE,
+  FRAMES_PER_SECOND,
+  ENEMY_APPEAR_RATE
+} from "../../constants";
+import RedEnemy from "../../Objects/Enemies/RedEnemy";
+import SquareEnemy from "../../Objects/Enemies/SquareEnemy";
+import GamePaused from "../../Objects/GamePaused";
+import Plane from "../../Objects/Plane";
 
 
 // reactjs functional component
@@ -9,13 +27,9 @@ function GameCanvas({reduceLives, addPoint}) {
   // enemies and bullets maintain the state on every re-paint by reactjs
   const [enemies, setEnemies] = useState([]);
   const [bullets, setBullets] = useState([]);
+  const [enemyBullets, setEnemyBullets] = useState([]);
 
-  const [planeObject] = useState(createObjectWithPosition({
-    xPos: CANVAS_WIDTH / 2 - PLANE_TIP_POS,
-    yPos: PLANE_VERTICAL_PLANE,
-    width: PLANE_WIDTH,
-    height: PLANE_HEIGHT
-  }));
+  const [planeObject] = useState(new Plane(CANVAS_WIDTH / 2 - PLANE_TIP_POS));
 
   // html canvas functions happen inside the useEffect hook
   // which is only called once by react when the component is mounted.
@@ -33,7 +47,11 @@ function GameCanvas({reduceLives, addPoint}) {
 
 
     // bullets array contain all the bullets on the board as objects with position
+    // this array is here for the good guy bullets
     let bullets_ = bullets;
+    // this array is here for the bad buy bullets
+    let enemyBullets_ = enemyBullets;
+
     // enemies array contain all the enemies as objects with position
     let enemies_ = enemies;
 
@@ -45,29 +63,19 @@ function GameCanvas({reduceLives, addPoint}) {
       switch (e.code) {
         case "ArrowLeft":
           if (!gamePaused) {
-            planeObject.xPos = movePlane(
-              planeObject.xPos - PLANE_MOVE_SPEED, 
-              planeObject.xPos);
+            planeObject.movePlane(MOVE_LEFT);
           }
           break;
         case "ArrowRight":
           if (!gamePaused) {
-              planeObject.xPos = movePlane(
-              planeObject.xPos + PLANE_MOVE_SPEED, 
-              planeObject.xPos);
+              planeObject.movePlane(MOVE_RIGHT);
           }
           break;
         case "Space":
           if (!gamePaused) {
             // Add a bullet to the game
             // This new object is pushed to the bullets array
-            bullets_.push(createObjectWithPosition({
-              xPos: planeObject.xPos + PLANE_TIP_POS,
-              yPos: planeObject.yPos,
-              width: 1,
-              height: 20
-            }));
-            setBullets([...bullets_]);
+            planeObject.shootBullet(bullets_);
           }
           break;        
         case "KeyP":
@@ -82,7 +90,7 @@ function GameCanvas({reduceLives, addPoint}) {
       // if game is paused, don't update the game objects
       if (gamePaused) {
         // print that the game is paused
-        paintGamePaused(ctx);
+        new GamePaused().paint(ctx);
         return;
       }
 
@@ -90,27 +98,40 @@ function GameCanvas({reduceLives, addPoint}) {
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       ctx.fillStyle = COLOR_BACKGROUND;
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+      
+      // save bullets and enemy bullets on reactjs component state for DOM
+      // repaints that occur when an enemy is added
+      setBullets([...bullets_]);
+      setEnemyBullets([...enemyBullets_]);
+
+      // Canvas repaint of plane, bullets and enemies
       paintPlaneCharacter(ctx, planeObject);
-      paintBullets(ctx, bullets_);
-      paintEnemies(ctx, enemies_, movementSpeed);
-      const collision = detectCollisions(planeObject, bullets_, enemies_);
+      paintBullets(ctx, bullets_, enemyBullets_);
+      paintEnemies(ctx, enemies_);
+      const collision = detectCollisions(planeObject, bullets_, enemies_, enemyBullets_);
       reportCollision(collision);
     }
 
     function reportCollision({type, index_1, index_2}) {
-      console.log(type);
+      let objectToDelete;
       switch(type) {
+        case COLLISION_BULLET_PLANE:
+          reduceLives();
+          objectToDelete = enemyBullets_.splice(index_1, 1);
+          delete objectToDelete[0];
+          break;
         case COLLISION_PLANE_ENEMY:
           reduceLives();
-          enemies_.splice(index_1, 1);
-          setEnemies([...enemies_])
+          objectToDelete = enemies_.splice(index_1, 1);
+          delete objectToDelete[0];
           break;
         case COLLISION_BULLET_ENEMY:
           addPoint(enemies_[index_1].attributes.pointsMultiplier);
-          enemies_.splice(index_1, 1);
+          objectToDelete = enemies_.splice(index_1, 1);
+          delete objectToDelete[0];
           setEnemies([...enemies_])
-          bullets_.splice(index_2, 1);
-          setBullets([...bullets_])
+          objectToDelete = bullets_.splice(index_2, 1);
+          delete objectToDelete[0];
           break;
         default:
       }
@@ -122,20 +143,25 @@ function GameCanvas({reduceLives, addPoint}) {
     // Create enemies interval
     const enemiesInterval = setInterval(() => {
       if (!gamePaused) {
-        // randomly get enemy power and set color to distinguish
-        const pointsMultiplier = Math.floor(Math.random() * 2) + 1 ;
-        const enemyColor = pointsMultiplier > 1 ? COLOR_ENEMY_RED : COLOR_ENEMY_BLUE;
-        // add new enemy
-        enemies_.push(createObjectWithPosition({
-          xPos: Math.floor(Math.random() * CANVAS_WIDTH),
-          yPos: 0,
-          width: 20,
-          height: 20,
-          attributes: {
-            pointsMultiplier: pointsMultiplier,
-            color: enemyColor
-          }
-        }));
+        // randomly create a red enemy
+        // Random method creates a number between 0 and 1
+        const enemyType = Math.floor(Math.random() * 2);
+
+        if (enemyType === 0) {
+          // add new enemy
+          enemies_.push(new SquareEnemy(
+            Math.floor(Math.random() * CANVAS_WIDTH),
+            0,
+            movementSpeed
+          ))
+        } else if (enemyType === 1) {
+          enemies_.push(new RedEnemy(
+            Math.floor(Math.random() * CANVAS_WIDTH),
+            0,
+            movementSpeed * 2
+          ))
+        }
+
         setEnemies([...enemies_])
       }
     }, ENEMY_APPEAR_RATE);
@@ -164,129 +190,50 @@ export default GameCanvas;
 
 
 // This function paints the plain character
-function paintPlaneCharacter(ctx, {xPos, yPos, width, height}) {
-  ctx.fillStyle = COLOR_PLANE;
-  // plane is a triangle object
-  ctx.beginPath();
-  ctx.moveTo(xPos + PLANE_TIP_POS, yPos);
-  ctx.lineTo(xPos + width, yPos + height);
-  ctx.lineTo(xPos, yPos + height);
-  ctx.fill();
+function paintPlaneCharacter(ctx, planeObject) {
+  planeObject.paint(ctx);
 }
 
 // This function loops through all the bullets on the game and 
 // triggers a function to paint them, while updating their y postion 
 // in canvas for the next paint. 
-// At each paint, the bullet's y position is moved 10 pixels to the top
-function paintBullets(ctx, bullets) {
-  for (let a = 0; a < bullets.length; a++) {
-    paintBullet(ctx, bullets[a])
-    
-    // Move this bullet y position 10 pixels towards the top.
-    bullets[a].yPos = bullets[a].yPos - 10;
-
-    // remove bullet from the game when y position goes out of canvas
-    if (bullets[a].yPos < 0) {
-      bullets.splice(a, 1);
-    }
+// At each paint, the bullet's y position is moved to the top
+function paintBullets(ctx, bullets_, enemyBullets_) {
+  // paint good bullets
+  for (let bulletIndex = 0; bulletIndex < bullets_.length; bulletIndex++) {
+    bullets_[bulletIndex].move().paint(ctx).removeIfOutOfBounds(bullets_, bulletIndex);
   }
-}
-
-
-// Paint a bullet at the indicated position
-function paintBullet(ctx, {xPos, yPos, width, height}) {
-  ctx.fillStyle = COLOR_BULLET;
-  ctx.fillRect(xPos, yPos, width, - height);
+  // paint enemy bullets
+  for (let bulletIndex = 0; bulletIndex < enemyBullets_.length; bulletIndex++) {
+    enemyBullets_[bulletIndex].move().paint(ctx).removeIfOutOfBounds(enemyBullets_, bulletIndex);
+  }
 }
 
 // Enemies
 
 // Loop through all the enemies and paint them
-function paintEnemies(ctx, enemies, movementSpeed) {
-  for (let a = 0; a < enemies.length; a++) {
-    paintEnemy(ctx, enemies[a])
-    
-    // Move this bullet y position 5 pixels towards the bottom.
-    enemies[a].yPos = enemies[a].yPos + movementSpeed;
-
-    // remove bullet from the game when y position goes out of canvas
-    if (enemies[a].yPos > CANVAS_HEIGHT) {
-      enemies[a].yPos = 0;
-    }
+function paintEnemies(ctx, enemies_) {
+  for (let enemiesIndex = 0; enemiesIndex < enemies_.length; enemiesIndex++) {
+    enemies_[enemiesIndex].move().paint(ctx);
   }
 }
 
-// Paint an enemy according to its attributes
-function paintEnemy(ctx, {xPos, yPos, width, height, attributes}) {
-  ctx.save();
-  ctx.fillStyle = attributes.color;
-  ctx.translate(xPos, yPos);
-  ctx.fillRect(0, 0, width, height);
-  ctx.restore();
-}
-
-
-// Paint a message indicating the game is paused
-function paintGamePaused(ctx) {
-  const fontSize = 48;
-  const textHorizontalPosition  = CANVAS_WIDTH / 2 + 20;
-  const textVerticalPosition    = CANVAS_HEIGHT - CANVAS_HEIGHT / 3;
-
-  // Draw veil on top of everything
-  // ctx.globalAlpha = 0.2;
-  // ctx.fillStyle = COLOR_BACKGROUND;
-  // ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-  // ctx.globalAlpha = 1;
-
-  // Type text to let user know game is paused
-  ctx.textAlighn = "center";
-  ctx.fillStyle = COLOR_FONT;
-  ctx.font = `normal 400 ${fontSize}px Helvetica`;
-  ctx.fillText('Game', textHorizontalPosition, textVerticalPosition);
-  ctx.fillText('Paused...', textHorizontalPosition, textVerticalPosition + fontSize);
-}
-
-// Moves the plane left and right
-function movePlane(newPos, oldPos) {
-  // prevent plane from moving out of boundaries
-  // returns the previously known position
-  if (newPos > CANVAS_WIDTH - PLANE_WIDTH / 2 )
-    return oldPos;
-  if (newPos < - PLANE_WIDTH / 2)
-    return oldPos;
-  return newPos;
-}
-
-// Create physical object on the canvas
-// This function only adds the object initial x and y position
-// along with it's in-game width and height.
-// The returned object is agnostic of what the object in the game is
-// it is simply there as reference of its position and dimensions to
-// later be used for collition detection to identify if an object is being hit.
-function createObjectWithPosition({xPos, yPos, width, height, attributes}) {
-  return {
-    xPos,
-    yPos,
-    width,
-    height,
-    attributes
-  };
-}
-
-function detectCollisions(planeObject, bullets, enemies) {
-  for(let enemyIndex = 0; enemyIndex < enemies.length; enemyIndex++) {
+function detectCollisions(planeObject, bullets_, enemies_, enemyBullets_) {
+  // detect collisions with enemies
+  for(let enemyIndex = 0; enemyIndex < enemies_.length; enemyIndex++) {
     // Detect collision with plane
     // collition with plane
-    if (detectCollision(enemies[enemyIndex], planeObject)) {
+    if (enemies_[enemyIndex].detectCollisionWith(planeObject)) {
       console.log('collition')
       return {
         type: COLLISION_PLANE_ENEMY,
         index_1: enemyIndex
       };
     }
-  
-    for (let bulletIndex = 0; bulletIndex < bullets.length; bulletIndex++) {
-      if(detectCollision(bullets[bulletIndex], enemies[enemyIndex])) {
+    
+    // detect collision of good bullets with the enemy
+    for (let bulletIndex = 0; bulletIndex < bullets_.length; bulletIndex++) {
+      if (bullets_[bulletIndex].detectCollisionWith(enemies_[enemyIndex])) {
         console.log('bullet kills'); 
         return {
           type: COLLISION_BULLET_ENEMY,
@@ -295,19 +242,19 @@ function detectCollisions(planeObject, bullets, enemies) {
         }
       }
     }
-
   }
+
+  // detect collisions with enemy bullets
+  for (let bulletIndex = 0; bulletIndex < enemyBullets_.length; bulletIndex++) {
+    // detect collision of enemy bullet with plane
+    if (enemyBullets_[bulletIndex].detectCollisionWith(planeObject)) {
+      console.log('bullet kills plane'); 
+      return {
+        type: COLLISION_BULLET_PLANE,
+        index_1: bulletIndex,
+      }
+    }
+  }
+
   return {type: COLLISION_NONE};
-}
-
-function detectCollision(object1, object2) {
-  if(
-    object1.xPos + object1.width  >= object2.xPos &&
-    object1.xPos                  <= object2.xPos + object2.width &&
-    object1.yPos + object1.height >= object2.yPos &&
-    object1.yPos                  <= object2.yPos + object2.height
-  ) {
-    return true;
-  }
-  return false;
 }
