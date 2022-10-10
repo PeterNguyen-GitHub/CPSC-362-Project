@@ -119,6 +119,7 @@ function GameCanvas({reduceLives, addPoint}) {
           reduceLives();
           objectToDelete = enemyBullets_.splice(index_1, 1);
           delete objectToDelete[0];
+          setEnemyBullets([...enemyBullets_]);
           break;
         case COLLISION_PLANE_ENEMY:
           reduceLives();
@@ -132,6 +133,7 @@ function GameCanvas({reduceLives, addPoint}) {
           setEnemies([...enemies_])
           objectToDelete = bullets_.splice(index_2, 1);
           delete objectToDelete[0];
+          setBullets([...bullets_]);
           break;
         default:
       }
