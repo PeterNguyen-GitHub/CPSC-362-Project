@@ -5,9 +5,11 @@ export const SCORES_VIEW              = 'scores_view';
 export const COLOR_BACKGROUND         = '#000000';
 export const COLOR_PLANE              = '#FFFFFF';
 export const COLOR_BULLET             = '#00FF00';
+export const COLOR_ENEMY_BULLET       = '#A72015';
 export const COLOR_FONT               = '#FFFF00';
 export const COLOR_ENEMY_BLUE         = '#0000FF';
 export const COLOR_ENEMY_RED          = '#FF0000';
+export const COLOR_ENEMY_GREEN        = '#3A972C';
 
 export const CANVAS_WIDTH             = 600;
 export const CANVAS_HEIGHT            = 600;
@@ -23,7 +25,7 @@ export const PLANE_WIDTH              = 50;
 export const PLANE_HEIGHT             = 50;
 export const PLANE_TIP_POS            = PLANE_WIDTH / 2;
 export const PLANE_VERTICAL_PLANE     = CANVAS_HEIGHT - PLANE_HEIGHT - 10;
-export const PLANE_MOVE_SPEED         = 10;
+export const PLANE_MOVE_SPEED         = 15;
 
 export const FRAMES_PER_SECOND        = 60;
 export const ENEMY_APPEAR_RATE        = 2000; // milliseconds
