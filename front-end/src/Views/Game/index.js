@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HOME_VIEW } from "../../constants";
+import { GAME_OVER_VIEW, HOME_VIEW } from "../../constants";
 import GameCanvas from "./GameCanvas";
 
 const INITIAL_LIVES_COUNT       = 4;
@@ -11,7 +11,14 @@ function GameView({ setView }) {
   const goToHome = () => setView(HOME_VIEW);
   function reduceLives() {
     console.log('reduce')
-    setLives(lives - 1);
+    const newLives = lives - 1;
+
+    if (newLives < 0) {
+      // ask user for email
+      setView(GAME_OVER_VIEW, {score: points});
+    }
+
+    setLives(newLives);
   }
 
   function addPoint(multiplier = 1) {

@@ -1,6 +1,7 @@
 export const HOME_VIEW                = 'home_view';
 export const GAME_VIEW                = 'game_view';
 export const SCORES_VIEW              = 'scores_view';
+export const GAME_OVER_VIEW           = 'game-over-view';
 
 export const COLOR_BACKGROUND         = '#000000';
 export const COLOR_PLANE              = '#FFFFFF';
