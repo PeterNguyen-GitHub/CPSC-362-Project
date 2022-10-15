@@ -7,11 +7,23 @@ class Enemy extends BoardObject
     pointsMultiplier: 1,
   };
   speed = 10;
+  firingIntervalID;
+  
   constructor(xPos, yPos, width, height, color, pointsMultiplier, speed) {
     super(xPos, yPos, width, height, color);
     this.speed = speed
     this.attributes.pointsMultiplier = pointsMultiplier;
   }
+
+  // firing intervals
+  setIntervalID(id) {
+    this.firingIntervalID = id;
+  }
+
+  getIntervalID() {
+    return this.firingIntervalID;
+  }
+
   move() {
     this.yPos = this.yPos + this.speed;
 
