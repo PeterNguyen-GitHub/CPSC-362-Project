@@ -11,6 +11,8 @@ class Bullet extends BoardObject
   move() {
     if (this.direction === BULLET_DIRECTION_DOWN_UP) {
       this.yPos = this.yPos - this.speed;
+    } else {
+      this.yPos = this.yPos + this.speed;
     }
     return this;
   }
