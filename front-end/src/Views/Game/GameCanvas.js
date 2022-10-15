@@ -15,6 +15,7 @@ import {
 } from "../../constants";
 import RedEnemy from "../../Objects/Enemies/RedEnemy";
 import SquareEnemy from "../../Objects/Enemies/SquareEnemy";
+import GreenEnemy from "../../Objects/Enemies/GreenEnemy";
 import GamePaused from "../../Objects/GamePaused";
 import Plane from "../../Objects/Plane";
 
@@ -123,14 +124,20 @@ function GameCanvas({reduceLives, addPoint}) {
           break;
         case COLLISION_PLANE_ENEMY:
           reduceLives();
+          // Destroy Enemy from game
           objectToDelete = enemies_.splice(index_1, 1);
+          clearInterval(objectToDelete.getIntervalID())
           delete objectToDelete[0];
           break;
         case COLLISION_BULLET_ENEMY:
           addPoint(enemies_[index_1].attributes.pointsMultiplier);
+          // Destroy Enemy from game
           objectToDelete = enemies_.splice(index_1, 1);
+          clearInterval(objectToDelete.getIntervalID())
           delete objectToDelete[0];
           setEnemies([...enemies_])
+
+          // Destroy good bullets from game
           objectToDelete = bullets_.splice(index_2, 1);
           delete objectToDelete[0];
           setBullets([...bullets_]);
@@ -146,8 +153,8 @@ function GameCanvas({reduceLives, addPoint}) {
     const enemiesInterval = setInterval(() => {
       if (!gamePaused) {
         // randomly create a red enemy
-        // Random method creates a number between 0 and 1
-        const enemyType = Math.floor(Math.random() * 2);
+        // Random method creates a number between 0 and 2
+        const enemyType = Math.floor(Math.random() * 3);
 
         if (enemyType === 0) {
           // add new enemy
@@ -162,7 +169,22 @@ function GameCanvas({reduceLives, addPoint}) {
             0,
             movementSpeed * 2
           ))
+        } else if (enemyType === 2) {
+          const newShuttingEnemy = new GreenEnemy(
+            Math.floor(Math.random() * CANVAS_WIDTH),
+            0,
+            movementSpeed
+          );
+
+          const thisEnemyFireIntervalID = setInterval(() => newShuttingEnemy.shootEnemyBullet(enemyBullets_), 1200);
+
+          newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
+
+          enemies_.push(newShuttingEnemy)
+
+          setInterval()
         }
+
 
         setEnemies([...enemies_])
       }
