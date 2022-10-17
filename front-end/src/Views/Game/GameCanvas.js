@@ -193,7 +193,7 @@ function GameCanvas({reduceLives, addPoint}) {
         clearInterval(enemy.getIntervalID())
       })
     }
-  }, [enemies]);
+  }, []);
 
   return (
     <>
