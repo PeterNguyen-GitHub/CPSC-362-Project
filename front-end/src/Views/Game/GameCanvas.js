@@ -97,11 +97,6 @@ function GameCanvas({reduceLives, addPoint}) {
       ctx.fillStyle = COLOR_BACKGROUND;
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
       
-      // save bullets and enemy bullets on reactjs component state for DOM
-      // repaints that occur when an enemy is added
-      setBullets([...bullets_]);
-      setEnemyBullets([...enemyBullets_]);
-
       // Canvas repaint of plane, bullets and enemies
       paintPlaneCharacter(ctx, planeObject);
       paintBullets(ctx, bullets_, enemyBullets_);
@@ -117,7 +112,6 @@ function GameCanvas({reduceLives, addPoint}) {
           reduceLives();
           objectToDelete = enemyBullets_.splice(index_1, 1);
           delete objectToDelete[0];
-          setEnemyBullets([...enemyBullets_]);
           break;
         case COLLISION_PLANE_ENEMY:
           reduceLives();
@@ -139,7 +133,6 @@ function GameCanvas({reduceLives, addPoint}) {
           // Destroy good bullets from game
           objectToDelete = bullets_.splice(index_2, 1);
           delete objectToDelete[0];
-          setBullets([...bullets_]);
           break;
         default:
       }
