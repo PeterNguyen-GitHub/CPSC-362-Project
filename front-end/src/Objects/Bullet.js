@@ -1,4 +1,4 @@
-import { BULLET_DIRECTION_DOWN_UP, CANVAS_HEIGHT } from "../constants";
+import { BULLET_DIRECTION_DOWN_UP, BULLET_DIRECTION_UP_DOWN, CANVAS_HEIGHT } from "../constants";
 import BoardObject from "./BoardObject";
 
 class Bullet extends BoardObject
