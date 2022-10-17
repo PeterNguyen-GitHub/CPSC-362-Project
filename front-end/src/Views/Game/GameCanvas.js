@@ -27,10 +27,6 @@ function GameCanvas({reduceLives, addPoint}) {
 
   // enemies and bullets maintain the state on every re-paint by reactjs
   const [enemies, setEnemies] = useState([]);
-  const [bullets, setBullets] = useState([]);
-  const [enemyBullets, setEnemyBullets] = useState([]);
-
-  const [planeObject] = useState(new Plane(CANVAS_WIDTH / 2 - PLANE_TIP_POS));
 
   // html canvas functions happen inside the useEffect hook
   // which is only called once by react when the component is mounted.
@@ -46,12 +42,13 @@ function GameCanvas({reduceLives, addPoint}) {
     // which provides the API to paint on the canvas.
     const ctx = canvasElement.getContext('2d');
 
+    const planeObject = new Plane(CANVAS_WIDTH / 2 - PLANE_TIP_POS);
 
     // bullets array contain all the bullets on the board as objects with position
     // this array is here for the good guy bullets
-    let bullets_ = bullets;
+    let bullets_ = [];
     // this array is here for the bad buy bullets
-    let enemyBullets_ = enemyBullets;
+    let enemyBullets_ = [];
 
     // enemies array contain all the enemies as objects with position
     let enemies_ = enemies;
