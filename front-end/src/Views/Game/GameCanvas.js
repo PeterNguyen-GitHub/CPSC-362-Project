@@ -21,16 +21,12 @@ import Plane from "../../Objects/Plane";
 
 
 // reactjs functional component
-function GameCanvas({reduceLives, addPoint}) {
+function GameCanvas({reduceLives, addPoint, lives}) {
   const canvasRef = useRef(null);
   const [movementSpeed, setMovementSpeed] = useState(1);
 
   // enemies and bullets maintain the state on every re-paint by reactjs
   const [enemies, setEnemies] = useState([]);
-  const [bullets, setBullets] = useState([]);
-  const [enemyBullets, setEnemyBullets] = useState([]);
-
-  const [planeObject] = useState(new Plane(CANVAS_WIDTH / 2 - PLANE_TIP_POS));
 
   // html canvas functions happen inside the useEffect hook
   // which is only called once by react when the component is mounted.
@@ -46,12 +42,13 @@ function GameCanvas({reduceLives, addPoint}) {
     // which provides the API to paint on the canvas.
     const ctx = canvasElement.getContext('2d');
 
+    const planeObject = new Plane(CANVAS_WIDTH / 2 - PLANE_TIP_POS);
 
     // bullets array contain all the bullets on the board as objects with position
     // this array is here for the good guy bullets
-    let bullets_ = bullets;
+    let bullets_ = [];
     // this array is here for the bad buy bullets
-    let enemyBullets_ = enemyBullets;
+    let enemyBullets_ = [];
 
     // enemies array contain all the enemies as objects with position
     let enemies_ = enemies;
@@ -100,11 +97,6 @@ function GameCanvas({reduceLives, addPoint}) {
       ctx.fillStyle = COLOR_BACKGROUND;
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height)
       
-      // save bullets and enemy bullets on reactjs component state for DOM
-      // repaints that occur when an enemy is added
-      setBullets([...bullets_]);
-      setEnemyBullets([...enemyBullets_]);
-
       // Canvas repaint of plane, bullets and enemies
       paintPlaneCharacter(ctx, planeObject);
       paintBullets(ctx, bullets_, enemyBullets_);
@@ -120,14 +112,13 @@ function GameCanvas({reduceLives, addPoint}) {
           reduceLives();
           objectToDelete = enemyBullets_.splice(index_1, 1);
           delete objectToDelete[0];
-          setEnemyBullets([...enemyBullets_]);
           break;
         case COLLISION_PLANE_ENEMY:
           reduceLives();
           // Destroy Enemy from game
           objectToDelete = enemies_.splice(index_1, 1);
           // TODO: Error states that getIntervalID is not a function
-          clearInterval(objectToDelete.getIntervalID())
+          clearInterval(objectToDelete[0].getIntervalID())
           delete objectToDelete[0];
           break;
         case COLLISION_BULLET_ENEMY:
@@ -135,14 +126,13 @@ function GameCanvas({reduceLives, addPoint}) {
           // Destroy Enemy from game
           objectToDelete = enemies_.splice(index_1, 1);
           // TODO: Error states that getIntervalID is not a function
-          clearInterval(objectToDelete.getIntervalID())
+          clearInterval(objectToDelete[0].getIntervalID())
           delete objectToDelete[0];
           setEnemies([...enemies_])
 
           // Destroy good bullets from game
           objectToDelete = bullets_.splice(index_2, 1);
           delete objectToDelete[0];
-          setBullets([...bullets_]);
           break;
         default:
       }
@@ -178,13 +168,15 @@ function GameCanvas({reduceLives, addPoint}) {
             movementSpeed
           );
 
-          const thisEnemyFireIntervalID = setInterval(() => newShuttingEnemy.shootEnemyBullet(enemyBullets_), 1200);
+          const thisEnemyFireIntervalID = setInterval(() => {
+            if (!gamePaused) {
+              newShuttingEnemy.shootEnemyBullet(enemyBullets_)
+            }
+          }, 1200);
 
           newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
 
           enemies_.push(newShuttingEnemy)
-
-          setInterval()
         }
 
 
@@ -201,8 +193,11 @@ function GameCanvas({reduceLives, addPoint}) {
       document.removeEventListener('keydown', keyboardInput)
       clearInterval(canvasInterval);
       clearInterval(enemiesInterval);
+      enemies_.forEach(enemy => {
+        clearInterval(enemy.getIntervalID())
+      })
     }
-  }, [enemies]);
+  }, []);
 
   return (
     <>
