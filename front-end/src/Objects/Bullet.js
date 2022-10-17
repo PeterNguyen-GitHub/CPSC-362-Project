@@ -27,7 +27,7 @@ class Bullet extends BoardObject
         delete bulletOutOfBounds[0];
       }
     }
-    if (this.direction === BULLET_DIRECTION_DOWN_UP) {
+    if (this.direction === BULLET_DIRECTION_UP_DOWN) {
       if (this.yPos > CANVAS_HEIGHT) {
         const bulletOutOfBounds = inGameBulletsArray.splice(thisBulletIndex, 1);
         delete bulletOutOfBounds[0];
