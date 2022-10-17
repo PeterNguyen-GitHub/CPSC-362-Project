@@ -199,6 +199,9 @@ function GameCanvas({reduceLives, addPoint}) {
       document.removeEventListener('keydown', keyboardInput)
       clearInterval(canvasInterval);
       clearInterval(enemiesInterval);
+      enemies_.forEach(enemy => {
+        clearInterval(enemy.getIntervalID())
+      })
     }
   }, [enemies]);
 
