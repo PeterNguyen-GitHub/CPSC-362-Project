@@ -183,8 +183,6 @@ function GameCanvas({reduceLives, addPoint}) {
           newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
 
           enemies_.push(newShuttingEnemy)
-
-          setInterval()
         }
 
 
