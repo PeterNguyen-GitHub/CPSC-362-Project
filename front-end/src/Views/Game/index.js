@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GAME_OVER_VIEW, HOME_VIEW } from "../../constants";
 import GameCanvas from "./GameCanvas";
 
@@ -10,20 +10,21 @@ function GameView({ setView }) {
 
   const goToHome = () => setView(HOME_VIEW);
   function reduceLives() {
-    console.log('reduce')
-    const newLives = lives - 1;
-
-    if (newLives < 0) {
+    console.log('reduce');
+    setLives(lives => lives - 1);
+  }
+  
+  function addPoint(multiplier = 1) {
+    setPoints(points => points + (1 * multiplier));
+  }
+  
+  useEffect(() => {
+    if (lives < 0) {
       // ask user for email
       setView(GAME_OVER_VIEW, {score: points});
     }
+  }, [lives])
 
-    setLives(newLives);
-  }
-
-  function addPoint(multiplier = 1) {
-    setPoints(points + (1 * multiplier));
-  }
   return (
     <div style={{
       display: 'flex',
