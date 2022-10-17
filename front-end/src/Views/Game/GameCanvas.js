@@ -117,7 +117,6 @@ function GameCanvas({reduceLives, addPoint, lives}) {
           reduceLives();
           // Destroy Enemy from game
           objectToDelete = enemies_.splice(index_1, 1);
-          // TODO: Error states that getIntervalID is not a function
           clearInterval(objectToDelete[0].getIntervalID())
           delete objectToDelete[0];
           break;
@@ -125,7 +124,6 @@ function GameCanvas({reduceLives, addPoint, lives}) {
           addPoint(enemies_[index_1].attributes.pointsMultiplier);
           // Destroy Enemy from game
           objectToDelete = enemies_.splice(index_1, 1);
-          // TODO: Error states that getIntervalID is not a function
           clearInterval(objectToDelete[0].getIntervalID())
           delete objectToDelete[0];
           setEnemies([...enemies_])
