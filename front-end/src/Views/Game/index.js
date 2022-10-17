@@ -34,7 +34,7 @@ function GameView({ setView }) {
       <button onClick={goToHome}>Home</button>
       <h2>Lives: {lives} Points: {points}</h2>
       <div>
-        <GameCanvas reduceLives={reduceLives} addPoint={addPoint} />
+        <GameCanvas reduceLives={reduceLives} addPoint={addPoint} lives={lives} />
       </div>
     </div>
   );

@@ -21,7 +21,7 @@ import Plane from "../../Objects/Plane";
 
 
 // reactjs functional component
-function GameCanvas({reduceLives, addPoint}) {
+function GameCanvas({reduceLives, addPoint, lives}) {
   const canvasRef = useRef(null);
   const [movementSpeed, setMovementSpeed] = useState(1);
 
@@ -184,7 +184,6 @@ function GameCanvas({reduceLives, addPoint}) {
 
           enemies_.push(newShuttingEnemy)
 
-          setInterval()
         }
 
 
@@ -202,7 +201,7 @@ function GameCanvas({reduceLives, addPoint}) {
       clearInterval(canvasInterval);
       clearInterval(enemiesInterval);
     }
-  }, [enemies]);
+  }, [enemies, lives]);
 
   return (
     <>
