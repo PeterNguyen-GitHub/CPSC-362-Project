@@ -2,6 +2,7 @@ export const HOME_VIEW                = 'home_view';
 export const GAME_VIEW                = 'game_view';
 export const SCORES_VIEW              = 'scores_view';
 export const GAME_OVER_VIEW           = 'game-over-view';
+export const DIFFICULTY_VIEW          = 'difficulty-view';
 
 export const COLOR_BACKGROUND         = '#000000';
 export const COLOR_PLANE              = '#FFFFFF';
@@ -29,7 +30,7 @@ export const PLANE_VERTICAL_PLANE     = CANVAS_HEIGHT - PLANE_HEIGHT - 10;
 export const PLANE_MOVE_SPEED         = 15;
 
 export const FRAMES_PER_SECOND        = 60;
-export const ENEMY_APPEAR_RATE        = 2000; // milliseconds
+// export const ENEMY_APPEAR_RATE        = 2000; // milliseconds
 
 export const COLLISION_PLANE_ENEMY    = 'plane_enemy_collision';
 export const COLLISION_BULLET_ENEMY   = 'bullet_enemy_collision';
