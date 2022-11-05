@@ -14,6 +14,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build-production": "react-scripts build && rm -rf ../back-end/public/build && mv build ../back-end/public/",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
