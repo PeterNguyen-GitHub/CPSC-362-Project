@@ -10,18 +10,29 @@ import {
   COLLISION_BULLET_ENEMY,
   COLLISION_BULLET_PLANE,
   COLLISION_NONE,
-  FRAMES_PER_SECOND,
-  ENEMY_APPEAR_RATE
+  FRAMES_PER_SECOND
 } from "../../constants";
+import { difficulty } from "../Difficulty/Difficulty";
 import RedEnemy from "../../Objects/Enemies/RedEnemy";
 import SquareEnemy from "../../Objects/Enemies/SquareEnemy";
 import GreenEnemy from "../../Objects/Enemies/GreenEnemy";
 import GamePaused from "../../Objects/GamePaused";
 import Plane from "../../Objects/Plane";
 
-
 // reactjs functional component
 function GameCanvas({reduceLives, addPoint, lives}) {
+
+  // define rate at which enemies spawn 
+  var enemyAppearRate = 2000;     // milliseconds
+
+  // change spawn rate if difficulty is not on Normal
+  if (difficulty === 0) {
+    enemyAppearRate = 2500;       // slower enemy spawn rate if difficulty === Easy
+  }
+  else if (difficulty === 2) {
+    enemyAppearRate = 1600;       // faster enemy spawn rate if difficulty === Hard
+  }
+
   const canvasRef = useRef(null);
   const [movementSpeed, setMovementSpeed] = useState(1);
 
@@ -180,7 +191,7 @@ function GameCanvas({reduceLives, addPoint, lives}) {
 
         setEnemies([...enemies_])
       }
-    }, ENEMY_APPEAR_RATE);
+    }, enemyAppearRate);
     
     // Add event listener for keyboard inputs
     document.addEventListener('keydown', keyboardInput, false);
