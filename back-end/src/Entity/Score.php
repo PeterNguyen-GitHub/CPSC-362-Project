@@ -18,7 +18,7 @@ class Score
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'scores')]
+    #[ORM\ManyToOne(inversedBy: 'scores', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
