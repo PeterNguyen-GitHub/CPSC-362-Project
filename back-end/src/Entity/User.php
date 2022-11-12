@@ -2,31 +2,36 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ApiResource()]
 class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
+    #[ORM\Column]
+    private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $email;
+    #[ORM\Column(length: 255)]
+    private ?string $email = null;
 
-    #[ORM\Column(type: 'string', length: 120)]
-    private $username;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Score::class, orphanRemoval: true, cascade: ['persist'])]
+    private Collection $scores;
 
-    #[ORM\Column(type: 'datetime')]
-    private $dateAdded;
+    #[ORM\Column(length: 255)]
+    private ?string $username = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Score::class, orphanRemoval: true)]
-    private $scores;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateAdded = null;
 
     public function __construct()
     {
@@ -43,9 +48,39 @@ class User
         return $this->email;
     }
 
-    public function setEmail(?string $email): self
+    public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Score>
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function addScore(Score $score): self
+    {
+        if (!$this->scores->contains($score)) {
+            $this->scores->add($score);
+            $score->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): self
+    {
+        if ($this->scores->removeElement($score)) {
+            // set the owning side to null (unless already changed)
+            if ($score->getUser() === $this) {
+                $score->setUser(null);
+            }
+        }
 
         return $this;
     }
@@ -70,37 +105,7 @@ class User
     #[ORM\PrePersist]
     public function setDateAdded(): self
     {
-        $this->dateAdded = new \DateTimeImmutable();
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Score>
-     */
-    public function getScores(): Collection
-    {
-        return $this->scores;
-    }
-
-    public function addScore(Score $score): self
-    {
-        if (!$this->scores->contains($score)) {
-            $this->scores[] = $score;
-            $score->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScore(Score $score): self
-    {
-        if ($this->scores->removeElement($score)) {
-            // set the owning side to null (unless already changed)
-            if ($score->getUser() === $this) {
-                $score->setUser(null);
-            }
-        }
+        $this->dateAdded = new DateTimeImmutable();
 
         return $this;
     }
