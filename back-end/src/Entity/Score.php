@@ -2,27 +2,31 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ScoreRepository;
+use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ScoreRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ApiResource]
 class Score
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
+    #[ORM\Column]
+    private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'scores')]
+    #[ORM\ManyToOne(inversedBy: 'scores', cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
-    private $user;
+    private ?User $user = null;
 
-    #[ORM\Column(type: 'datetime')]
-    private $dateAdded;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $dateAdded = null;
 
-    #[ORM\Column(type: 'integer')]
-    private $score;
+    #[ORM\Column]
+    private ?int $score = null;
 
     public function getId(): ?int
     {
@@ -49,7 +53,7 @@ class Score
     #[ORM\PrePersist]
     public function setDateAdded(): self
     {
-        $this->dateAdded = new \DateTimeImmutable();
+        $this->dateAdded = new DateTimeImmutable();
 
         return $this;
     }
