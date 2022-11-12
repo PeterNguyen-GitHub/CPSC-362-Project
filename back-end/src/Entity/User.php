@@ -14,10 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource()]
-// #[ApiResource(
-//   normalizationContext: ['groups' => ['read']],
-//   denormalizationContext: ['groups' => ['write']]
-// )]
 class User
 {
     #[ORM\Id]
@@ -28,8 +24,7 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Score::class, orphanRemoval: true)]
-    #[Groups(["user:read"])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Score::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $scores;
 
     #[ORM\Column(length: 255)]

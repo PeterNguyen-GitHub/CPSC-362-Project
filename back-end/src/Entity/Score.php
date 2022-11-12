@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use Symfony\Component\Serializer\Annotation\Groups;
 use App\Repository\ScoreRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
@@ -21,7 +20,6 @@ class Score
 
     #[ORM\ManyToOne(inversedBy: 'scores')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["score:read", "score:write"])]
     private ?User $user = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
