@@ -4,12 +4,9 @@
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "1.0",
-            "ref": "a2759dd6123694c8d901d0ec80006e044c2e6457"
-        },
-        "files": [
-            "config/routes/annotations.yaml"
-        ]
+            "version": "1.10",
+            "ref": "64d8583af5ea57b7afa4aba4b159907f3a148b05"
+        }
     },
     "doctrine/doctrine-bundle": {
         "version": "2.7",
@@ -39,7 +36,7 @@
         ]
     },
     "symfony/console": {
-        "version": "5.4",
+        "version": "6.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -51,7 +48,7 @@
         ]
     },
     "symfony/flex": {
-        "version": "1.19",
+        "version": "2.2",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -63,7 +60,7 @@
         ]
     },
     "symfony/framework-bundle": {
-        "version": "5.4",
+        "version": "6.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -82,7 +79,7 @@
         ]
     },
     "symfony/maker-bundle": {
-        "version": "1.43",
+        "version": "1.47",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -91,42 +88,16 @@
         }
     },
     "symfony/routing": {
-        "version": "5.4",
+        "version": "6.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "5.3",
-            "ref": "85de1d8ae45b284c3c84b668171d2615049e698f"
+            "version": "6.1",
+            "ref": "a44010c0d06989bd4f154aa07d2542d47caf5b83"
         },
         "files": [
             "config/packages/routing.yaml",
             "config/routes.yaml"
-        ]
-    },
-    "symfony/twig-bundle": {
-        "version": "5.4",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "5.4",
-            "ref": "bb2178c57eee79e6be0b297aa96fc0c0def81387"
-        },
-        "files": [
-            "config/packages/twig.yaml",
-            "templates/base.html.twig"
-        ]
-    },
-    "symfony/web-profiler-bundle": {
-        "version": "5.4",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "5.3",
-            "ref": "24bbc3d84ef2f427f82104f766014e799eefcc3e"
-        },
-        "files": [
-            "config/packages/web_profiler.yaml",
-            "config/routes/web_profiler.yaml"
         ]
     }
 }
