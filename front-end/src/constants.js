@@ -12,6 +12,10 @@ export const COLOR_FONT               = '#FFFF00';
 export const COLOR_ENEMY_BLUE         = '#0000FF';
 export const COLOR_ENEMY_RED          = '#FF0000';
 export const COLOR_ENEMY_GREEN        = '#3A972C';
+export const COLOR_ENEMY_PURPLE       = '#A020F0';
+export const COLOR_ENEMY_YELLOW       = '#FFFF00';
+export const COLOR_ENEMY_ORANGE       = '#FFA500';
+export const COLOR_ENEMY_PINK         = '#FF10F0';
 
 export const CANVAS_WIDTH             = 600;
 export const CANVAS_HEIGHT            = 600;
