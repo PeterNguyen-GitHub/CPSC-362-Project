@@ -41,10 +41,12 @@ class ScoreController extends AbstractController
 
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
 
+        
         if (empty($user)) {
+            $username = substr($email, 0, strpos($email, '@'));
             $user = new User();
             $user->setEmail($email)
-                ->setUsername($email);
+                ->setUsername($username);
         }
 
         $score = new Score();
