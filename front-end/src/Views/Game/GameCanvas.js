@@ -16,6 +16,9 @@ import { difficulty } from "../Difficulty/Difficulty";
 import RedEnemy from "../../Objects/Enemies/RedEnemy";
 import SquareEnemy from "../../Objects/Enemies/SquareEnemy";
 import GreenEnemy from "../../Objects/Enemies/GreenEnemy";
+import PurpleEnemy from "../../Objects/Enemies/PurpleEnemy";
+import YellowEnemy from "../../Objects/Enemies/YellowEnemy";
+import OrangeEnemy from "../../Objects/Enemies/OrangeEnemy";
 import GamePaused from "../../Objects/GamePaused";
 import Plane from "../../Objects/Plane";
 
@@ -155,7 +158,7 @@ function GameCanvas({reduceLives, addPoint, lives}) {
       if (!gamePaused) {
         // randomly create a red enemy
         // Random method creates a number between 0 and 2
-        const enemyType = Math.floor(Math.random() * 3);
+        const enemyType = Math.floor(Math.random() * 6);
 
         if (enemyType === 0) {
           // add new enemy
@@ -183,6 +186,44 @@ function GameCanvas({reduceLives, addPoint, lives}) {
             }
           }, 1200);
 
+          newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
+
+          enemies_.push(newShuttingEnemy)
+        } else if (enemyType === 3) {
+          enemies_.push(new PurpleEnemy(
+            Math.floor(Math.random() * CANVAS_WIDTH),
+            0,
+            movementSpeed
+          ))
+        } else if (enemyType === 4) {
+          const newShuttingEnemy = new YellowEnemy(
+            Math.floor(Math.random() * CANVAS_WIDTH),
+            0,
+            movementSpeed
+          );
+
+          const thisEnemyFireIntervalID = setInterval(() => {
+            if (!gamePaused) {
+              newShuttingEnemy.shootEnemyBullet(enemyBullets_)
+            }
+          },1200);
+          
+          newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
+          
+          enemies_.push(newShuttingEnemy)
+        } else if (enemyType === 5) {
+          const newShuttingEnemy = new OrangeEnemy(
+            Math.floor(Math.random() * CANVAS_WIDTH),
+            0,
+            movementSpeed
+          );
+
+          const thisEnemyFireIntervalID = setInterval(() => {
+            if (!gamePaused) {
+              newShuttingEnemy.shootEnemBullet(enemyBullets_)
+            }
+          },2400);
+          
           newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
 
           enemies_.push(newShuttingEnemy)
