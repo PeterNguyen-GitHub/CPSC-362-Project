@@ -1,8 +1,21 @@
+import { useEffect, useState } from "react";
 import { HOME_VIEW } from "../../constants";
 
 function ScoresView({ setView }) {
+    const [scores, setScores] = useState([]);
 
     const goToHome = () => setView(HOME_VIEW);
+
+    useEffect(async () => {
+        try {
+            const responseStream = await fetch('/scores');
+            const response = await responseStream.json();
+            setScores(response.scores);
+            console.log(response.scores);
+        } catch (error) {
+            console.error(error);
+        }
+    }, []);
 
     return (
         <div>
