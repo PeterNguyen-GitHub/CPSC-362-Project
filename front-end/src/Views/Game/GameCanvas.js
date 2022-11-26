@@ -224,7 +224,7 @@ function GameCanvas({reduceLives, addPoint, lives}) {
 
           const thisEnemyFireIntervalID = setInterval(() => {
             if (!gamePaused) {
-              newShuttingEnemy.shootEnemBullet(enemyBullets_)
+              newShuttingEnemy.shootEnemyBullet(enemyBullets_)
             }
           },2400);
           
