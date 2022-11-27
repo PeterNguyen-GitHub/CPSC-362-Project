@@ -98,6 +98,10 @@ function GameCanvas({reduceLives, addPoint, lives}) {
       }
     }
 
+    function pauseWhenWindowIsInactive() {
+      gamePaused = true;
+    }
+
     function paintCanvas() {
       // if game is paused, don't update the game objects
       if (gamePaused) {
@@ -220,7 +224,7 @@ function GameCanvas({reduceLives, addPoint, lives}) {
 
           const thisEnemyFireIntervalID = setInterval(() => {
             if (!gamePaused) {
-              newShuttingEnemy.shootEnemBullet(enemyBullets_)
+              newShuttingEnemy.shootEnemyBullet(enemyBullets_)
             }
           },2400);
           
@@ -236,6 +240,9 @@ function GameCanvas({reduceLives, addPoint, lives}) {
     
     // Add event listener for keyboard inputs
     document.addEventListener('keydown', keyboardInput, false);
+
+    // Event listener for when windows tab goes out of view
+    window.addEventListener("blur", pauseWhenWindowIsInactive, false);
     
     // Clear event listeners and time intervals to avoid memory leaks when the
     // component is removed from view
