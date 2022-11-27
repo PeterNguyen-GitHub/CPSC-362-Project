@@ -6,15 +6,18 @@ function ScoresView({ setView }) {
 
     const goToHome = () => setView(HOME_VIEW);
 
-    useEffect(async () => {
-        try {
-            const responseStream = await fetch('https://game.fnino.com/scores');
-            const response = await responseStream.json();
-            setScores(response.scores);
-            console.log(response.scores);
-        } catch (error) {
-            console.error(error);
+    useEffect(() => {
+        async function fetchScores() {
+            try {
+                const responseStream = await fetch('https://game.fnino.com/scores');
+                const response = await responseStream.json();
+                setScores(response.scores);
+                console.log(response.scores);
+            } catch (error) {
+                console.error(error);
+            }
         }
+        fetchScores();
     }, []);
 
     return (
