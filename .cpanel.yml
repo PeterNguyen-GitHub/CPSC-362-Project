@@ -1,10 +1,4 @@
 deployment:
   tasks:
-    - export DEPLOYPATH=../public_html/game/
-    - cd back-end
-    - composer install
-    - cd ../front-end
-    - npm install
-    - npm run build-production
-    - cd ..
-    - /bin/cp back-end/public/* $DEPLOYPATH
+  - export DEPLOYPATH=~/public_html/game/
+  - /opt/cpanel/composer/bin/composer install --working-dir=back-end & /bin/cp -R back-end/public/. $DEPLOYPATH
