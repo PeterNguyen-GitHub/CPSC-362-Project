@@ -8,7 +8,7 @@ function ScoresView({ setView }) {
 
     useEffect(async () => {
         try {
-            const responseStream = await fetch('/scores');
+            const responseStream = await fetch('https://game.fnino.com/scores');
             const response = await responseStream.json();
             setScores(response.scores);
             console.log(response.scores);

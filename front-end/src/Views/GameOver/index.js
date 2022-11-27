@@ -14,7 +14,7 @@ function GameOver({ setView, score}) {
     formData.append('score', score);
 
     try {
-      const responseStream = await fetch('/score', {
+      const responseStream = await fetch('https://game.fnino.com/score', {
         method: 'POST',
         body: formData
       });
