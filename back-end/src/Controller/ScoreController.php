@@ -29,22 +29,24 @@ class ScoreController extends AbstractController
             return $this->json([
                 'error' => 'user',
                 'message' => 'Missing user information',
-            ]);
+            ], 400);
         }
 
         if (empty($scoreValue)) {
             return $this->json([
                 'error' => 'score',
                 'message' => 'Missing score information',
-            ]);
+            ], 400);
         }
 
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
 
+        
         if (empty($user)) {
+            $username = substr($email, 0, strpos($email, '@'));
             $user = new User();
             $user->setEmail($email)
-                ->setUsername($email);
+                ->setUsername($username);
         }
 
         $score = new Score();
