@@ -162,8 +162,8 @@ function GameCanvas({reduceLives, addPoint, lives}) {
     const enemiesInterval = setInterval(() => {
       if (!gamePaused) {
         // randomly create a red enemy
-        // Random method creates a number between 0 and 2
-        const enemyType = Math.floor(Math.random() * 6);
+        // Random method creates a number between 0 and 6
+        const enemyType = Math.floor(Math.random() * 7);
 
         if (enemyType === 0) {
           // add new enemy
@@ -226,7 +226,6 @@ function GameCanvas({reduceLives, addPoint, lives}) {
           const thisEnemyFireIntervalID = setInterval(() => {
             if (!gamePaused) {
               newShuttingEnemy.shootEnemyBullet(enemyBullets_)
-<<<<<<< HEAD
             }
           },2400);
           
@@ -243,8 +242,7 @@ function GameCanvas({reduceLives, addPoint, lives}) {
           const thisEnemyFireIntervalID = setInterval(() => {
             if (!gamePaused) {
               newShuttingEnemy.shootEnemyBullet(enemyBullets_)
-=======
->>>>>>> 6cd6588132c455dc73829c60de155c6498258bbe
+
             }
           },2400);
           
