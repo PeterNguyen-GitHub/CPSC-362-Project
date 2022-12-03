@@ -40,6 +40,11 @@ function GameView({ setView }) {
     console.log('reduce');
     setLives(lives => lives - 1);
   }
+
+  function addLives() {
+    console.log('increase');
+    setLives(lives => lives + 1);
+  }
   
   function addPoint(multiplier) {
     setPoints(points => points + (10 * multiplier * difficultyMultiplier));
@@ -83,7 +88,11 @@ function GameView({ setView }) {
       <h2>Lives: {lives} Points: {points} Difficulty: {difficultyWord}</h2>
       <h2>Timer: {timer} Level: {level}</h2>
       <div>
-        <GameCanvas reduceLives={reduceLives} addPoint={addPoint} lives={lives} />
+        <GameCanvas 
+          reduceLives={reduceLives} 
+          addLives={addLives}
+          addPoint={addPoint} 
+          lives={lives} />
       </div>
     </div>
   );
