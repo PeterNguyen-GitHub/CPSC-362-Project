@@ -1,4 +1,6 @@
 body {
+  background-color: black;
+  color: #ececec;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -10,4 +12,167 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+h1 {
+  font-size: 3em;
+	font-weight: 100;
+}
+
+.view {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.home-page h1 {
+	font-size: 6.5em;
+}
+
+p {
+	font-weight: 300;
+	line-height: 1.6em;
+	max-width: 800px;
+}
+
+.menu {
+	margin: 50px auto;
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+}
+
+.menu button {
+	padding: 60px 20px;
+	font-size: 2em;
+	background: #3e3e3e;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	width: 40%;
+	text-transform: uppercase;
+}
+
+.game-page {
+  display: 'flex';
+  flex-direction: 'column';
+  gap: 20;
+}
+
+.difficulty-menu {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	height: 60vh;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
+.difficulty-menu button {
+	padding: 60px 20px;
+	font-size: 1.2em;
+	background: #3e3e3e;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	text-transform: uppercase;
+}
+
+button:hover {
+  background-color: cadetblue;
+  color: black;
+}
+
+.view.scores-page {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	justify-content: space-between;
+}
+
+.scores-page table {
+	width: 100%;
+	text-align: center;
+	font-size: 1.2em;
+	line-height: 1.6em;
+}
+
+.scores-page table tbody {
+	font-weight: 200;
+	text-transform: uppercase;
+}
+
+.scores-page .difficulty-menu,
+.gameover-page .difficulty-menu,
+.game-page .difficulty-menu {
+	height: auto;
+}
+
+
+.game-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.stats {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+}
+
+.score-value {
+  font-weight: bold;
+  font-size: 2em;
+}
+
+.view.gameover-page {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	justify-content: space-between;
+}
+
+.score-wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 40px;
+}
+
+.score-wrapper h2 {
+	font-size: 5em;
+	margin-bottom: 0;
+}
+
+.player-info {
+	font-size: 2em;
+	margin-bottom: 20px;
+}
+
+.player-info p {
+  margin-top: 0;
+}
+
+.player-info form {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	font-size: 0.8em;
+}
+
+.player-info .email {
+	font-size: 1em;
+	padding: 5px;
+	border-radius: 5px;
+	border: none;
+}
+
+.player-info button {
+	padding: 14px;
+	font-size: 1em;
+	background: #3e3e3e;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	text-transform: uppercase;
 }

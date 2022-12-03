@@ -33,21 +33,31 @@ function GameOver({ setView, score}) {
   }
 
   return (
-    <>
+    <div className="view gameover-page">
       <h1>Game Over</h1>
-      <h2>Your score was {score} </h2>
-      <form onSubmit={submitForm} action="" method="post">
-        {
-          errorMessage.length > 0 &&
-          <div className="error-message">
-            <p>{errorMessage}</p>
+      <div className="score-wrapper">
+        <h2>Your score was {score} </h2>
+        {score > 0 && (
+          <div className="player-info">
+            <p>Tell us about you:</p>
+            <form onSubmit={submitForm} action="" method="post">
+              {
+                errorMessage.length > 0 &&
+                <div className="error-message">
+                  <p>{errorMessage}</p>
+                </div>
+              }
+              <label htmlFor="email">Email</label>
+              <input className="email" type="text" name="email" id="email" required/>
+              <button type="submit">Send</button>
+            </form>
           </div>
-        }
-        <input type="text" name="email" required/>
-        <button type="submit">Send</button>
-      </form>
-      <button onClick={goToHome}>Home</button>
-    </>
+        )}
+      </div>
+      <div className="difficulty-menu">
+        <button onClick={goToHome}>Home</button>
+      </div>
+    </div>
   );
 }
 

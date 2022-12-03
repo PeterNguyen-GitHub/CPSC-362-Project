@@ -53,14 +53,20 @@ function GameView({ setView }) {
   function updateTimer() {
     if (level < 4) {
       setTimer(timer => timer - 1);
-
+      console.log(timer);
       // increment level if user survives 30 seconds and award points
-      if (timer <= 0) {
+     /* if (timer <= 0) {
         setTimer(startingTimer);
         setPoints(points => points + (levelPoints * difficultyMultiplier * level));
         setLevel(level => level + 1);
-      }
+      } */
     }
+  }
+
+  function updateLevel() {
+    setTimer(startingTimer);
+    setPoints(points => points + (levelPoints * difficultyMultiplier * level));
+    setLevel(level => level + 1);
   }
   
   useEffect(() => {
@@ -71,22 +77,35 @@ function GameView({ setView }) {
   }, [lives])
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 20
-    }}>
-      <h1>Game View</h1>
-      <button onClick={goToHome}>Home</button>
-      <h2>Lives: {lives} Points: {points} Difficulty: {difficultyWord}</h2>
-      <h2>Timer: {timer} Level: {level}</h2>
-      <div>
+    <div className="view game-page">
+      <h1>Level {level}</h1>
+      <div className="stats">
+        <p className="lives">
+          <span style={{
+            color: lives <= 2 ? 'red' : 'white',
+            fontWeight: lives <= 2 ? 'bold' : null,
+          }}>Lives: <span className="score-value">{lives}</span> </span>
+          • 
+          Points: <span className="score-value">{points}</span>
+        </p>
+        <p>Difficulty: {difficultyWord}</p>
+        <p>Time to next level: {timer}</p>
+      </div>
+      <div className="game-wrapper">
         <GameCanvas 
           reduceLives={reduceLives} 
           addLives={addLives}
           addPoint={addPoint} 
           updateTimer={updateTimer}
+          updateLevel={updateLevel}
           lives={lives} />
+      </div>
+      <div className="instructions">
+          <h2> Controls: </h2>
+          <p> Left Arrow: Move player to the left <br />Right Arrow: Move player to the right <br />Spacebar: Shoot bullet </p>
+      </div>
+      <div className="difficulty-menu">
+        <button onClick={goToHome}>Home</button>
       </div>
     </div>
   );

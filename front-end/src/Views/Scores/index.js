@@ -21,35 +21,37 @@ function ScoresView({ setView }) {
     }, []);
 
     return (
-        <div>
+        <div className="view scores-page">
             <h1>Scores</h1>
-            <button onClick={goToHome}>Go To Home</button>
             <table>
-            <thead>
-                <tr>
-                     <th>Username</th>
-                     <th>Score</th>
-                     <th>Date</th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Score</th>
+                        <th>Date</th>
+                    </tr>
                 </thead>
-                      <tbody>
-                
+                <tbody>
+
 
                     {scores.map((item, i) => {
-                             return (
-                                 <tr key={i}>
-                                            <td>{item.username}</td>
-                                            <td>{item.score}</td>
-                                            <td>{new Intl.DateTimeFormat('en-US').format(new Date(item.date))}</td>
-        </tr>
-    );
-  })}
+                        return (
+                            <tr key={i}>
+                                <td>{item.username}</td>
+                                <td>{item.score}</td>
+                                <td>{new Intl.DateTimeFormat('en-US').format(new Date(item.date))}</td>
+                            </tr>
+                        );
+                    })}
 
-                     </tbody>
+                </tbody>
             </table>
+            <div className="difficulty-menu">
+                <button onClick={goToHome}>Go To Home</button>
+            </div>
         </div>
 
-        
+
     );
 }
 
