@@ -27,6 +27,7 @@ import Powerup from "../../Objects/Powerup";
 
 // reactjs functional component
 function GameCanvas({reduceLives, addLives, addPoint, lives}) {
+  const audioElement = useRef(null);
 
   // define rate at which enemies spawn 
   var enemyAppearRate = 2000;     // milliseconds
@@ -101,6 +102,11 @@ function GameCanvas({reduceLives, addLives, addPoint, lives}) {
         case "KeyP":
           // Pause and take out of pause the game
           gamePaused = (!gamePaused);
+          if (gamePaused) {
+            audioElement.current.pause();
+          } else {
+            audioElement.current.play();
+          }
           break;
         default:
       }
@@ -108,6 +114,11 @@ function GameCanvas({reduceLives, addLives, addPoint, lives}) {
 
     function pauseWhenWindowIsInactive() {
       gamePaused = true;
+      if (gamePaused) {
+        audioElement.current.pause();
+      } else {
+        audioElement.current.play();
+      }
     }
 
     function paintCanvas() {
@@ -330,6 +341,12 @@ function GameCanvas({reduceLives, addLives, addPoint, lives}) {
     <>
       <p>Enemy Count: {enemies.length}</p>
       <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT}></canvas>
+      <audio 
+        ref={audioElement}
+        autoPlay
+        loop
+        src="https://game.fnino.com/song.mp3">
+      </audio>
     </>
   )
 }
