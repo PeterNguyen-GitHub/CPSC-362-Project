@@ -32,12 +32,14 @@ function DifficultyView({ setView }) {
     const goToHome = () => setView(HOME_VIEW);
 
     return (
-        <div>
+        <div className="view difficulty-page">
             <h1>Select Difficulty</h1>
-            <button onClick={goToGameEasy}>Easy Difficulty</button>
-            <button onClick={goToGameNormal}>Normal Difficulty</button>
-            <button onClick={goToGameHard}>Hard Difficulty</button>
-            <button onClick={goToHome}>Go To Home</button>
+            <div className="difficulty-menu">
+                <button onClick={goToGameEasy}>Easy Difficulty</button>
+                <button onClick={goToGameNormal}>Normal Difficulty</button>
+                <button onClick={goToGameHard}>Hard Difficulty</button>
+                <button onClick={goToHome}>Go To Home</button>
+            </div>
         </div>
     );
 }

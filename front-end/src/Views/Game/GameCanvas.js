@@ -26,7 +26,7 @@ import Plane from "../../Objects/Plane";
 import Powerup from "../../Objects/Powerup";
 
 // reactjs functional component
-function GameCanvas({reduceLives, addLives, addPoint, lives}) {
+function GameCanvas({reduceLives, addLives, addPoint, updateTimer, updateLevel, lives}) {
   const audioElement = useRef(null);
 
   // define rate at which enemies spawn 
@@ -83,16 +83,19 @@ function GameCanvas({reduceLives, addLives, addPoint, lives}) {
     function keyboardInput(e) {
       switch (e.code) {
         case "ArrowLeft":
+          e.preventDefault();
           if (!gamePaused) {
             planeObject.movePlane(MOVE_LEFT);
           }
           break;
         case "ArrowRight":
+          e.preventDefault();
           if (!gamePaused) {
               planeObject.movePlane(MOVE_RIGHT);
           }
           break;
         case "Space":
+          e.preventDefault();
           if (!gamePaused) {
             // Add a bullet to the game
             // This new object is pushed to the bullets array
@@ -100,6 +103,7 @@ function GameCanvas({reduceLives, addLives, addPoint, lives}) {
           }
           break;        
         case "KeyP":
+          e.preventDefault();
           // Pause and take out of pause the game
           gamePaused = (!gamePaused);
           if (gamePaused) {
@@ -186,10 +190,12 @@ function GameCanvas({reduceLives, addLives, addPoint, lives}) {
     let gameTime = 0;
     let enemyRate = appearRate;
     const gameTimer2 = setInterval(function() {
-      if (gameTime < 120) {   
+      if (!gamePaused && gameTime < 120) {   
+        updateTimer();
         gameTime++;
         if ((gameTime % 30)  === 0)    // increase enemy spawn rate every level
         {
+          updateLevel();
           enemyRate = enemyRate - 200; 
           clearInterval(enemiesInterval);
           setEnemiesInterval(enemyRate);
@@ -318,7 +324,7 @@ function GameCanvas({reduceLives, addLives, addPoint, lives}) {
     }, 5000)
     
     // Add event listener for keyboard inputs
-    document.addEventListener('keydown', keyboardInput, false);
+    document.addEventListener('keydown', keyboardInput);
 
     // Event listener for when windows tab goes out of view
     window.addEventListener("blur", pauseWhenWindowIsInactive, false);
