@@ -61,7 +61,7 @@ function GameView({ setView }) {
         setLevel(level => level + 1);
       }
     }
-}
+  }
   
   useEffect(() => {
     if (lives < 0) {
