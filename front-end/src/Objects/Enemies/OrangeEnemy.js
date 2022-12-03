@@ -1,5 +1,6 @@
 import { COLOR_ENEMY_ORANGE, BULLET_DIRECTION_UP_DOWN, COLOR_ENEMY_BULLET } from "../../constants";
 import Enemy from "../Enemy";
+import Bullet from "../Bullet";
 import BulletDiagonal from "../BulletDiagonal";
 
 class OrangeEnemy extends Enemy

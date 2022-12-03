@@ -4,7 +4,7 @@ import Enemy from "../Enemy";
 class PurpleEnemy extends Enemy
 {
     moveXCounter = 2;
-
+    zigzagcounter = 0;
     constructor(xPos, yPos, speed) {
         const width             = 20;
         const height            = 20;
@@ -29,17 +29,35 @@ class PurpleEnemy extends Enemy
         }
         // move in both directions horzontally creating a zig zag pattern
         if (this.moveXCounter === 0) {
-            this.moveXCounter = 2;
+            if (this.zigzagcounter >= 0 && this.zigzagcounter <= 100){
+                this.moveXCounter = 2;
 
-            const newXpos = this.xPos + this.speed;
-            if (newXpos < CANVAS_WIDTH && newXpos > 0) {
-                this.xPos = newXpos;
-            } else {
+                const newXpos = this.xPos + this.speed;
+              if (newXpos < CANVAS_WIDTH && newXpos > 0) {
+                 this.xPos = newXpos;
+               } else {
                 this.xPos = 0;
-            }
+               }
+               this.zigzagcounter++;
+               if (this.zigzagcounter === 101) {
+                this.zigzagcounter -= 102;
+               }
             
-        }
+            } else if (this.zigzagcounter <= 0 && this.zigzagcounter >= -100) {
+                this.moveXCounter = 2;              // reset counter
 
+                const newXpos = this.xPos - this.speed;
+                if (newXpos < CANVAS_WIDTH && newXpos > 0) {
+                  this.xPos = newXpos;
+                } else {
+                  this.xPos = CANVAS_WIDTH;
+                }
+                this.zigzagcounter--;
+                if (this.zigzagcounter === -101) {
+                    this.zigzagcounter += 102;
+                }
+            }
+    }
         this.moveXCounter--;
         return this;
     }

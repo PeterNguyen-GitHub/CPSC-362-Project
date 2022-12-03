@@ -19,6 +19,7 @@ import GreenEnemy from "../../Objects/Enemies/GreenEnemy";
 import PurpleEnemy from "../../Objects/Enemies/PurpleEnemy";
 import YellowEnemy from "../../Objects/Enemies/YellowEnemy";
 import OrangeEnemy from "../../Objects/Enemies/OrangeEnemy";
+import PinkEnemy from "../../Objects/Enemies/PinkEnemy";
 import GamePaused from "../../Objects/GamePaused";
 import Plane from "../../Objects/Plane";
 
@@ -161,8 +162,8 @@ function GameCanvas({reduceLives, addPoint, lives}) {
     const enemiesInterval = setInterval(() => {
       if (!gamePaused) {
         // randomly create a red enemy
-        // Random method creates a number between 0 and 2
-        const enemyType = Math.floor(Math.random() * 6);
+        // Random method creates a number between 0 and 6
+        const enemyType = Math.floor(Math.random() * 7);
 
         if (enemyType === 0) {
           // add new enemy
@@ -197,7 +198,7 @@ function GameCanvas({reduceLives, addPoint, lives}) {
           enemies_.push(new PurpleEnemy(
             Math.floor(Math.random() * CANVAS_WIDTH),
             0,
-            movementSpeed
+            movementSpeed * 1.5
           ))
         } else if (enemyType === 4) {
           const newShuttingEnemy = new YellowEnemy(
@@ -225,6 +226,23 @@ function GameCanvas({reduceLives, addPoint, lives}) {
           const thisEnemyFireIntervalID = setInterval(() => {
             if (!gamePaused) {
               newShuttingEnemy.shootEnemyBullet(enemyBullets_)
+            }
+          },2400);
+          
+          newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
+
+          enemies_.push(newShuttingEnemy)
+        } else if (enemyType === 6) {
+           const newShuttingEnemy = new PinkEnemy(
+            Math.floor(Math.random() * CANVAS_WIDTH),
+            0,
+            movementSpeed
+          );
+
+          const thisEnemyFireIntervalID = setInterval(() => {
+            if (!gamePaused) {
+              newShuttingEnemy.shootEnemyBullet(enemyBullets_)
+
             }
           },2400);
           
