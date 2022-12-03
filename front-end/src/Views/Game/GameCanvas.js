@@ -26,7 +26,7 @@ import Plane from "../../Objects/Plane";
 import Powerup from "../../Objects/Powerup";
 
 // reactjs functional component
-function GameCanvas({reduceLives, addLives, addPoint, lives}) {
+function GameCanvas({reduceLives, addLives, addPoint, updateTimer, lives}) {
   const audioElement = useRef(null);
 
   // define rate at which enemies spawn 
@@ -186,7 +186,8 @@ function GameCanvas({reduceLives, addLives, addPoint, lives}) {
     let gameTime = 0;
     let enemyRate = appearRate;
     const gameTimer2 = setInterval(function() {
-      if (gameTime < 120) {   
+      if (!gamePaused && gameTime < 120) {   
+        updateTimer();
         gameTime++;
         if ((gameTime % 30)  === 0)    // increase enemy spawn rate every level
         {

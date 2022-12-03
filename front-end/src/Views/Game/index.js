@@ -49,6 +49,19 @@ function GameView({ setView }) {
   function addPoint(multiplier) {
     setPoints(points => points + (10 * multiplier * difficultyMultiplier));
   }
+
+  function updateTimer() {
+    if (level < 4) {
+      setTimer(timer => timer - 1);
+
+      // increment level if user survives 30 seconds and award points
+      if (timer <= 0) {
+        setTimer(startingTimer);
+        setPoints(points => points + (levelPoints * difficultyMultiplier * level));
+        setLevel(level => level + 1);
+      }
+    }
+}
   
   useEffect(() => {
     if (lives < 0) {
@@ -56,26 +69,6 @@ function GameView({ setView }) {
       setView(GAME_OVER_VIEW, {score: points});
     }
   }, [lives])
-  
-  useEffect(() => {
-    const gameTimer = setInterval(function() {
-      // max 4 levels
-      if (level < 4) {
-        setTimer(timer => timer - 1);
-
-        // increment level if user survives 30 seconds and award points
-        if (timer <= 0) {
-          setTimer(startingTimer);
-          setPoints(points => points + (levelPoints * difficultyMultiplier * level));
-          setLevel(level => level + 1);
-        }
-      }
-    }, 1000)
-
-    return () => {
-      clearInterval(gameTimer);
-    }
-  }, [timer])
 
   return (
     <div style={{
@@ -92,6 +85,7 @@ function GameView({ setView }) {
           reduceLives={reduceLives} 
           addLives={addLives}
           addPoint={addPoint} 
+          updateTimer={updateTimer}
           lives={lives} />
       </div>
     </div>
