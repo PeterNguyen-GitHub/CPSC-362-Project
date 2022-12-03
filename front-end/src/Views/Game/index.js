@@ -12,6 +12,9 @@ function GameView({ setView }) {
   var startingLives = 4;
   var difficultyMultiplier = 1;
   var difficultyWord = "Normal";
+  var startingTimer = 30;
+  var levelCount = 1;
+  var levelPoints = 200;
 
   // Easy difficulty changes
   if (difficulty === 0) {
@@ -29,6 +32,8 @@ function GameView({ setView }) {
 
   const [lives, setLives] = useState(startingLives);
   const [points, setPoints] = useState(0);
+  const [timer, setTimer] = useState(startingTimer);
+  const [level, setLevel] = useState(levelCount);
 
   const goToHome = () => setView(HOME_VIEW);
   function reduceLives() {
@@ -46,6 +51,26 @@ function GameView({ setView }) {
       setView(GAME_OVER_VIEW, {score: points});
     }
   }, [lives])
+  
+  useEffect(() => {
+    const gameTimer = setInterval(function() {
+      // max 4 levels
+      if (level < 4) {
+        setTimer(timer => timer - 1);
+
+        // increment level if user survives 30 seconds and award points
+        if (timer <= 0) {
+          setTimer(startingTimer);
+          setPoints(points => points + (levelPoints * difficultyMultiplier * level));
+          setLevel(level => level + 1);
+        }
+      }
+    }, 1000)
+
+    return () => {
+      clearInterval(gameTimer);
+    }
+  }, [timer])
 
   return (
     <div style={{
@@ -56,6 +81,7 @@ function GameView({ setView }) {
       <h1>Game View</h1>
       <button onClick={goToHome}>Home</button>
       <h2>Lives: {lives} Points: {points} Difficulty: {difficultyWord}</h2>
+      <h2>Timer: {timer} Level: {level}</h2>
       <div>
         <GameCanvas reduceLives={reduceLives} addPoint={addPoint} lives={lives} />
       </div>
