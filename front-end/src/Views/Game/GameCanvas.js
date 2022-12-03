@@ -28,14 +28,18 @@ function GameCanvas({reduceLives, addPoint, lives}) {
 
   // define rate at which enemies spawn 
   var enemyAppearRate = 2000;     // milliseconds
+  var inGameTime = 0;
 
   // change spawn rate if difficulty is not on Normal
   if (difficulty === 0) {
-    enemyAppearRate = 2500;       // slower enemy spawn rate if difficulty === Easy
+     enemyAppearRate = 2500;       // slower enemy spawn rate if difficulty === Easy
   }
   else if (difficulty === 2) {
-    enemyAppearRate = 1600;       // faster enemy spawn rate if difficulty === Hard
+     enemyAppearRate = 1600;       // faster enemy spawn rate if difficulty === Hard
   }
+
+  const [appearRate, setAppearRate] = useState(enemyAppearRate);
+  const [gameTime, setGameTime] = useState(inGameTime);
 
   const canvasRef = useRef(null);
   const [movementSpeed, setMovementSpeed] = useState(1);
@@ -69,7 +73,6 @@ function GameCanvas({reduceLives, addPoint, lives}) {
     let enemies_ = enemies;
 
     let gamePaused = false;
-
 
     // Keyboard events listened to
     function keyboardInput(e) {
@@ -158,103 +161,122 @@ function GameCanvas({reduceLives, addPoint, lives}) {
     // Create interval that re-paints the canvas at 60 fps
     const canvasInterval = setInterval(paintCanvas, 1000 / FRAMES_PER_SECOND);
 
-    // Create enemies interval
-    const enemiesInterval = setInterval(() => {
-      if (!gamePaused) {
-        // randomly create a red enemy
-        // Random method creates a number between 0 and 6
-        const enemyType = Math.floor(Math.random() * 7);
-
-        if (enemyType === 0) {
-          // add new enemy
-          enemies_.push(new SquareEnemy(
-            Math.floor(Math.random() * CANVAS_WIDTH),
-            0,
-            movementSpeed
-          ))
-        } else if (enemyType === 1) {
-          enemies_.push(new RedEnemy(
-            Math.floor(Math.random() * CANVAS_WIDTH),
-            0,
-            movementSpeed * 2
-          ))
-        } else if (enemyType === 2) {
-          const newShuttingEnemy = new GreenEnemy(
-            Math.floor(Math.random() * CANVAS_WIDTH),
-            0,
-            movementSpeed
-          );
-
-          const thisEnemyFireIntervalID = setInterval(() => {
-            if (!gamePaused) {
-              newShuttingEnemy.shootEnemyBullet(enemyBullets_)
-            }
-          }, 1200);
-
-          newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
-
-          enemies_.push(newShuttingEnemy)
-        } else if (enemyType === 3) {
-          enemies_.push(new PurpleEnemy(
-            Math.floor(Math.random() * CANVAS_WIDTH),
-            0,
-            movementSpeed * 1.5
-          ))
-        } else if (enemyType === 4) {
-          const newShuttingEnemy = new YellowEnemy(
-            Math.floor(Math.random() * CANVAS_WIDTH),
-            0,
-            movementSpeed
-          );
-
-          const thisEnemyFireIntervalID = setInterval(() => {
-            if (!gamePaused) {
-              newShuttingEnemy.shootEnemyBullet(enemyBullets_)
-            }
-          },1200);
-          
-          newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
-          
-          enemies_.push(newShuttingEnemy)
-        } else if (enemyType === 5) {
-          const newShuttingEnemy = new OrangeEnemy(
-            Math.floor(Math.random() * CANVAS_WIDTH),
-            0,
-            movementSpeed
-          );
-
-          const thisEnemyFireIntervalID = setInterval(() => {
-            if (!gamePaused) {
-              newShuttingEnemy.shootEnemyBullet(enemyBullets_)
-            }
-          },2400);
-          
-          newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
-
-          enemies_.push(newShuttingEnemy)
-        } else if (enemyType === 6) {
-           const newShuttingEnemy = new PinkEnemy(
-            Math.floor(Math.random() * CANVAS_WIDTH),
-            0,
-            movementSpeed
-          );
-
-          const thisEnemyFireIntervalID = setInterval(() => {
-            if (!gamePaused) {
-              newShuttingEnemy.shootEnemyBullet(enemyBullets_)
-
-            }
-          },2400);
-          
-          newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
-
-          enemies_.push(newShuttingEnemy)
+    // Create separate timer to mimic gameTimer from index.js
+    let gameTime = 0;
+    let enemyRate = appearRate;
+    const gameTimer2 = setInterval(function() {
+      if (gameTime < 120) {   
+        gameTime++;
+        if ((gameTime % 30)  === 0)    // increase enemy spawn rate every level
+        {
+          enemyRate = enemyRate - 200; 
+          clearInterval(enemiesInterval);
+          setEnemiesInterval(enemyRate);
         }
-
-
-        setEnemies([...enemies_])
       }
-    }, enemyAppearRate);
+    }, 1000)
+
+    const setEnemiesInterval = (appearRate_) => {
+      return setInterval(() => {
+        if (!gamePaused) {
+          // randomly create a red enemy
+          // Random method creates a number between 0 and 6
+          const enemyType = Math.floor(Math.random() * 7);
+  
+          if (enemyType === 0) {
+            // add new enemy
+            enemies_.push(new SquareEnemy(
+              Math.floor(Math.random() * CANVAS_WIDTH),
+              0,
+              movementSpeed
+            ))
+          } else if (enemyType === 1) {
+            enemies_.push(new RedEnemy(
+              Math.floor(Math.random() * CANVAS_WIDTH),
+              0,
+              movementSpeed * 2
+            ))
+          } else if (enemyType === 2) {
+            const newShuttingEnemy = new GreenEnemy(
+              Math.floor(Math.random() * CANVAS_WIDTH),
+              0,
+              movementSpeed
+            );
+  
+            const thisEnemyFireIntervalID = setInterval(() => {
+              if (!gamePaused) {
+                newShuttingEnemy.shootEnemyBullet(enemyBullets_)
+              }
+            }, 1200);
+  
+            newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
+  
+            enemies_.push(newShuttingEnemy)
+          } else if (enemyType === 3) {
+            enemies_.push(new PurpleEnemy(
+              Math.floor(Math.random() * CANVAS_WIDTH),
+              0,
+              movementSpeed * 1.5
+            ))
+          } else if (enemyType === 4) {
+            const newShuttingEnemy = new YellowEnemy(
+              Math.floor(Math.random() * CANVAS_WIDTH),
+              0,
+              movementSpeed
+            );
+  
+            const thisEnemyFireIntervalID = setInterval(() => {
+              if (!gamePaused) {
+                newShuttingEnemy.shootEnemyBullet(enemyBullets_)
+              }
+            },1200);
+            
+            newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
+            
+            enemies_.push(newShuttingEnemy)
+          } else if (enemyType === 5) {
+            const newShuttingEnemy = new OrangeEnemy(
+              Math.floor(Math.random() * CANVAS_WIDTH),
+              0,
+              movementSpeed
+            );
+  
+            const thisEnemyFireIntervalID = setInterval(() => {
+              if (!gamePaused) {
+                newShuttingEnemy.shootEnemyBullet(enemyBullets_)
+              }
+            },2400);
+            
+            newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
+  
+            enemies_.push(newShuttingEnemy)
+          } else if (enemyType === 6) {
+             const newShuttingEnemy = new PinkEnemy(
+              Math.floor(Math.random() * CANVAS_WIDTH),
+              0,
+              movementSpeed
+            );
+  
+            const thisEnemyFireIntervalID = setInterval(() => {
+              if (!gamePaused) {
+                newShuttingEnemy.shootEnemyBullet(enemyBullets_)
+  
+              }
+            },2400);
+            
+            newShuttingEnemy.setIntervalID(thisEnemyFireIntervalID);
+  
+            enemies_.push(newShuttingEnemy)
+          }
+  
+  
+          setEnemies([...enemies_])
+        }
+      }, appearRate_)
+    }
+
+    // Create enemies interval
+    const enemiesInterval = setEnemiesInterval(enemyRate);    
     
     // Add event listener for keyboard inputs
     document.addEventListener('keydown', keyboardInput, false);
@@ -267,6 +289,7 @@ function GameCanvas({reduceLives, addPoint, lives}) {
     return () => {
       document.removeEventListener('keydown', keyboardInput)
       clearInterval(canvasInterval);
+      clearInterval(gameTimer2);
       clearInterval(enemiesInterval);
       enemies_.forEach(enemy => {
         clearInterval(enemy.getIntervalID())
