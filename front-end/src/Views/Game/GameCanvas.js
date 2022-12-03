@@ -10,7 +10,8 @@ import {
   COLLISION_BULLET_ENEMY,
   COLLISION_BULLET_PLANE,
   COLLISION_NONE,
-  FRAMES_PER_SECOND
+  FRAMES_PER_SECOND,
+  COLLISION_PLANE_POWERUP
 } from "../../constants";
 import { difficulty } from "../Difficulty/Difficulty";
 import RedEnemy from "../../Objects/Enemies/RedEnemy";
@@ -22,9 +23,10 @@ import OrangeEnemy from "../../Objects/Enemies/OrangeEnemy";
 import PinkEnemy from "../../Objects/Enemies/PinkEnemy";
 import GamePaused from "../../Objects/GamePaused";
 import Plane from "../../Objects/Plane";
+import Powerup from "../../Objects/Powerup";
 
 // reactjs functional component
-function GameCanvas({reduceLives, addPoint, lives}) {
+function GameCanvas({reduceLives, addLives, addPoint, lives}) {
 
   // define rate at which enemies spawn 
   var enemyAppearRate = 2000;     // milliseconds
@@ -71,6 +73,8 @@ function GameCanvas({reduceLives, addPoint, lives}) {
 
     // enemies array contain all the enemies as objects with position
     let enemies_ = enemies;
+
+    let powerUps_ = [];
 
     let gamePaused = false;
 
@@ -123,13 +127,19 @@ function GameCanvas({reduceLives, addPoint, lives}) {
       paintPlaneCharacter(ctx, planeObject);
       paintBullets(ctx, bullets_, enemyBullets_);
       paintEnemies(ctx, enemies_);
-      const collision = detectCollisions(planeObject, bullets_, enemies_, enemyBullets_);
+      paintPowerUp(ctx, powerUps_);
+      const collision = detectCollisions(planeObject, bullets_, enemies_, enemyBullets_, powerUps_);
       reportCollision(collision);
     }
 
     function reportCollision({type, index_1, index_2}) {
       let objectToDelete;
       switch(type) {
+        case COLLISION_PLANE_POWERUP:
+          addLives();
+          objectToDelete = powerUps_.splice(index_1, 1);
+          delete objectToDelete[0];
+          break;
         case COLLISION_BULLET_PLANE:
           reduceLives();
           objectToDelete = enemyBullets_.splice(index_1, 1);
@@ -277,6 +287,24 @@ function GameCanvas({reduceLives, addPoint, lives}) {
 
     // Create enemies interval
     const enemiesInterval = setEnemiesInterval(enemyRate);    
+
+    // Create powerups interval
+    const powerupsInterval = setInterval(() => {
+      if (!gamePaused) {
+        // randomly create a powerup
+        // Random method creates a number between 0 and 9
+        const randomNumber = Math.floor(Math.random() * 10);
+
+        if (randomNumber === 0) {
+          // add new enemy
+          powerUps_.push(new Powerup(
+            Math.floor(Math.random() * CANVAS_WIDTH),
+            0,
+            movementSpeed
+          ))
+        }
+      }
+    }, 5000)
     
     // Add event listener for keyboard inputs
     document.addEventListener('keydown', keyboardInput, false);
@@ -291,6 +319,7 @@ function GameCanvas({reduceLives, addPoint, lives}) {
       clearInterval(canvasInterval);
       clearInterval(gameTimer2);
       clearInterval(enemiesInterval);
+      clearInterval(powerupsInterval);
       enemies_.forEach(enemy => {
         clearInterval(enemy.getIntervalID())
       })
@@ -337,7 +366,14 @@ function paintEnemies(ctx, enemies_) {
   }
 }
 
-function detectCollisions(planeObject, bullets_, enemies_, enemyBullets_) {
+// Loop through all the powerups and paint them
+function paintPowerUp(ctx, powerUps_) {
+  for (let powerupIndex = 0; powerupIndex < powerUps_.length; powerupIndex++) {
+    powerUps_[powerupIndex].move().paint(ctx);
+  }
+}
+
+function detectCollisions(planeObject, bullets_, enemies_, enemyBullets_, powerUps_) {
   // detect collisions with enemies
   for(let enemyIndex = 0; enemyIndex < enemies_.length; enemyIndex++) {
     // Detect collision with plane
@@ -359,6 +395,17 @@ function detectCollisions(planeObject, bullets_, enemies_, enemyBullets_) {
           index_1: enemyIndex,
           index_2: bulletIndex
         }
+      }
+    }
+  }
+
+  // detect collisions with power ups
+  for (let powerupIndex = 0; powerupIndex < powerUps_.length; powerupIndex++) {
+    if (powerUps_[powerupIndex].detectCollisionWith(planeObject)) {
+      console.log('power up gives live');
+      return {
+        type: COLLISION_PLANE_POWERUP,
+        index_1: powerupIndex,
       }
     }
   }

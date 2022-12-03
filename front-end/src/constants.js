@@ -16,6 +16,7 @@ export const COLOR_ENEMY_PURPLE       = '#A020F0';
 export const COLOR_ENEMY_YELLOW       = '#FFFF00';
 export const COLOR_ENEMY_ORANGE       = '#FFA500';
 export const COLOR_ENEMY_PINK         = '#FF10F0';
+export const COLOR_POWERUP            = '#10ECE2';
 
 export const CANVAS_WIDTH             = 600;
 export const CANVAS_HEIGHT            = 600;
@@ -40,3 +41,4 @@ export const COLLISION_PLANE_ENEMY    = 'plane_enemy_collision';
 export const COLLISION_BULLET_ENEMY   = 'bullet_enemy_collision';
 export const COLLISION_BULLET_PLANE   = 'bullet_plane_collision';
 export const COLLISION_NONE           = 'no_collision';
+export const COLLISION_PLANE_POWERUP  = 'plane_powerup-collision';
