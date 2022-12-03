@@ -48,7 +48,7 @@ function GameOver({ setView, score}) {
                 </div>
               }
               <label htmlFor="email">Email</label>
-              <input className="email" type="text" name="email" id="email" required/>
+              <input className="email" type="email" name="email" id="email" required/>
               <button type="submit">Send</button>
             </form>
           </div>
